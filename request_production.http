@@ -1,0 +1,69 @@
+### Register
+POST https://habittracker-be.onrender.com/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "tam",
+  "email":"tam@gmail.com",
+  "password": "tam"
+}
+
+### Login
+POST https://habittracker-be.onrender.com/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "tam@gmail.com",
+  "password": "tam"
+}
+
+### Get habits
+GET https://habittracker-be.onrender.com/api/habits
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTE2NDYwNDI3M2RlYzE1ODhhNjg0NTEiLCJpYXQiOjE2OTU5Njg3NTJ9.tUSDBrTlR7yvvBBkGN-SBNHmLHIntu-Hy9197d4wtE8
+
+### Create habit
+POST https://habittracker-be.onrender.com/api/habits
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTE2NDYwNDI3M2RlYzE1ODhhNjg0NTEiLCJpYXQiOjE2OTU5Njg3NTJ9.tUSDBrTlR7yvvBBkGN-SBNHmLHIntu-Hy9197d4wtE8
+
+{
+  "name": "drink mangosteen juice",
+  "description": "drink every day",
+  "goalValue": 21,
+  "goalFrequency": 2,
+  "reminderTime": "10 AM",
+  "completed": false
+}
+
+### Update habit
+PUT https://habittracker-be.onrender.com/api/habits/6516484c273dec1588a68456
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTE2NDYwNDI3M2RlYzE1ODhhNjg0NTEiLCJpYXQiOjE2OTU5Njg3NTJ9.tUSDBrTlR7yvvBBkGN-SBNHmLHIntu-Hy9197d4wtE8
+
+{
+  "name": "drink water",
+  "description": "drink every day",
+  "goalValue": 21,
+  "goalFrequency": 2,
+  "reminderTime": "10 AM",
+  "completed": false
+}
+
+### Delete habit
+DELETE https://habittracker-be.onrender.com/api/habits/6516484c273dec1588a68456
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTE2NDYwNDI3M2RlYzE1ODhhNjg0NTEiLCJpYXQiOjE2OTU5Njg3NTJ9.tUSDBrTlR7yvvBBkGN-SBNHmLHIntu-Hy9197d4wtE8
+
+### View progress
+GET https://habittracker-be.onrender.com/api/habits/6516484c273dec1588a68456/progress
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTE2NDYwNDI3M2RlYzE1ODhhNjg0NTEiLCJpYXQiOjE2OTU5Njg3NTJ9.tUSDBrTlR7yvvBBkGN-SBNHmLHIntu-Hy9197d4wtE8
+
+### Update progress
+PUT https://habittracker-be.onrender.com/api/habits/6516484c273dec1588a68456/progress
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTE2NDYwNDI3M2RlYzE1ODhhNjg0NTEiLCJpYXQiOjE2OTU5Njg3NTJ9.tUSDBrTlR7yvvBBkGN-SBNHmLHIntu-Hy9197d4wtE8
+
+{
+  "date": "2023-09-22"
+}
