@@ -1,25 +1,12 @@
-import React, { useState } from "react";
-import { FCheckbox, FormProvider, FTextField } from "../app/components/form";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
-import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import {
-  Alert,
-  Box,
-  Button,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-  Container,
-  Link,
-  IconButton,
-  InputAdornment,
-} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Alert, Container, Link, Stack, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import { FTextField, FormProvider } from "../app/components/form";
+import useAuth from "../hooks/useAuth";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -70,18 +57,23 @@ function LoginPage() {
           {!!errors.responseError && (
             <Alert severity="error">{errors.responseError.message}</Alert>
           )}
-          <Alert severity="info">
+          <Typography
+            sx={{
+              fontFamily: "Monaco", // Change the font family
+              textAlign: "center", // Center the text within the Typography component
+            }}
+          >
             Don't have an account?{" "}
-            <Link variant="subtitle2" component={RouterLink} to="/register">
+            <Link component={RouterLink} to="/register">
               Get started
             </Link>
-          </Alert>
+          </Typography>
           <FTextField name="email" label="Email address"></FTextField>
           <FTextField
             name="password"
             label="Password"
-            type={showPassword ? "text" : "password"}
-            InputProps={{
+            //type={showPassword ? "text" : "password"}
+            /*InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
@@ -92,29 +84,31 @@ function LoginPage() {
                   </IconButton>
                 </InputAdornment>
               ),
-            }}
+            }}*/
           ></FTextField>
+
+          <Typography
+            sx={{
+              fontFamily: "Monaco", // Change the font family
+              textAlign: "center", // Center the text within the Typography component
+            }}
+          >
+            Forgot password?{" "}
+            <Link component={RouterLink} to="/recover">
+              Recover here
+            </Link>
+          </Typography>
+
+          <LoadingButton
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+          >
+            Login
+          </LoadingButton>
         </Stack>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ my: 2 }}
-        >
-          <FCheckbox name="remember" label="Remember me" />
-          <Link component={RouterLink} variant="subtitle2" to="/">
-            Forgot password?
-          </Link>
-        </Stack>
-        <LoadingButton
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-        >
-          Login
-        </LoadingButton>
       </FormProvider>
     </Container>
   );

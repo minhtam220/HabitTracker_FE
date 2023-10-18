@@ -8,6 +8,7 @@ import {
   InputAdornment,
   Link,
   Stack,
+  Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -73,12 +74,17 @@ function RegisterPage() {
             <Alert severity="error">{errors.responseError.message}</Alert>
           )}
 
-          <Alert severity="info">
+          <Typography
+            sx={{
+              fontFamily: "Monaco", // Change the font family
+              textAlign: "center", // Center the text within the Typography component
+            }}
+          >
             Already have an account?{" "}
-            <Link variant="subtitle2" component={RouterLink} to="/login">
+            <Link component={RouterLink} to="/login">
               Sign In
             </Link>
-          </Alert>
+          </Typography>
 
           <FTextField name="username" label="Username"></FTextField>
           <FTextField name="email" label="Email"></FTextField>

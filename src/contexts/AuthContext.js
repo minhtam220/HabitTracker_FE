@@ -1,7 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
 import apiService from "../app/apiService";
-import { isValidToken } from "../utils/jwt";
 
 //initialize the state
 const initialState = {
@@ -16,6 +15,7 @@ const AuthContext = createContext({ ...initialState });
 const INITIALIZE = "AUTH.INITIALIZE";
 const LOGIN_SUCCESS = "AUTH.LOGIN_SUCCESS";
 const REGISTER_SUCCESS = "AUTH.REGISTER_SUCCESS";
+const RECOVER_SUCCESS = "AUTH.RECOVER_SUCCESS";
 const LOGOUT = "AUTH.LOGOUT";
 const UPDATE_PROFILE = "AUTH.UPDATE_PROFILE";
 
@@ -80,11 +80,18 @@ function AuthProvider({ children }) {
       try {
         const accessToken = window.localStorage.getItem("accessToken");
 
-        if (accessToken && isValidToken(accessToken)) {
-          setSession(accessToken);
+        /*
+        console.log("local storage " + localStorage.getItem("accessToken"));
 
-          const response = await apiService.get("/users/me");
-          console.log();
+        console.log("isValidToken " + isValidToken(accessToken));
+
+        console.log("user" + state.user);
+        */
+
+        if (accessToken) {
+          //if (accessToken && isValidToken(accessToken)) {
+          setSession(accessToken);
+          const response = await apiService.get("/auth/me");
           const user = response.data;
 
           dispatch({
@@ -127,13 +134,14 @@ function AuthProvider({ children }) {
   }, [updatedProfile]);
 
   const login = async ({ email, password }, callback) => {
+    console.log("running login AuthContext ");
     const response = await apiService.post("/auth/login", { email, password });
     const { user, accessToken } = response.data;
 
     setSession(accessToken);
+    console.log("local storage " + localStorage.getItem("accessToken"));
 
     dispatch({ type: LOGIN_SUCCESS, payload: { user } });
-
     callback();
   };
 

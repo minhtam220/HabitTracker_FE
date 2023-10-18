@@ -10,8 +10,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import Logo from "../app/components/Logo";
 import useAuth from "../hooks/useAuth";
+
+import { Link } from "react-router-dom";
 
 function MainHeader() {
   const { user, logout } = useAuth();
@@ -100,11 +101,13 @@ function MainHeader() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <Logo />
+            <Typography>37.78</Typography>
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Habit Tracker
-          </Typography>
+
+          <Link to="/analyse">Analyse</Link>
+          <Link to="/build">Build</Link>
+          <Link to="/check">Check</Link>
+
           <Box sx={{ flexGrow: 1 }} />
           <Box>
             <Avatar

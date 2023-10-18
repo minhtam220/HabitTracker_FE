@@ -59,12 +59,12 @@ function HabitCard({ habit }) {
       open={Boolean(anchorEl)}
       onClose={handleToggleHabitMenu}
     >
-      <MenuItem onClick={handleDeleteHabit} sx={{ mx: 1 }}>
-        Delete Habit
-      </MenuItem>
-      <Divider sx={{ borderStyle: "dashed" }} />
       <MenuItem onClick={handleEditHabit} sx={{ mx: 1 }}>
         Edit Habit
+      </MenuItem>
+      <Divider sx={{ borderStyle: "dashed" }} />
+      <MenuItem onClick={handleDeleteHabit} sx={{ mx: 1 }}>
+        Delete Habit
       </MenuItem>
     </Menu>
   );
@@ -85,6 +85,7 @@ function HabitCard({ habit }) {
               sx={{ display: "block", color: "text.secondary" }}
             >
               {habit?.description}
+              {/*habit?.results*/}
             </Typography>
           }
           action={

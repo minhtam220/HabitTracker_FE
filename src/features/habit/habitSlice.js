@@ -82,15 +82,12 @@ export const createHabit =
   };
 
 export const updateHabit =
-  ({ name, description, goalValue, goalFrequency, habitId }) =>
+  ({ description, habitId }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await apiService.put(`/habits/${habitId}`, {
-        name,
         description,
-        goalValue,
-        goalFrequency,
       });
       //console.log(response);
       dispatch(slice.actions.updatePostSuccess(response.data));
@@ -100,38 +97,21 @@ export const updateHabit =
     }
   };
 
-export const getHabits =
-  ({ userId, page, limit = 10 }) =>
-  async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    console.log("running getHabits");
+export const getHabits = () => async (dispatch) => {
+  dispatch(slice.actions.startLoading());
+  console.log("running getHabits");
 
-    try {
-      const params = { page, limit };
+  try {
+    const response = await apiService.get(`/habits/me`);
 
-      const response = await apiService.get(
-        `https://habittracker-be.onrender.com/api/habits`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTE2NDYwNDI3M2RlYzE1ODhhNjg0NTEiLCJpYXQiOjE2OTU5Njg3NTJ9.tUSDBrTlR7yvvBBkGN-SBNHmLHIntu-Hy9197d4wtE8",
-          },
-          params: {
-            userId, // Assuming userId is a variable containing the user ID
-            page,
-            limit,
-          },
-        }
-      );
+    console.log(response.data);
 
-      console.log(response.data);
+    dispatch(slice.actions.getHabitSuccess(response.data));
+  } catch (error) {
+    dispatch(slice.actions.hasError(error.message));
+  }
+};
 
-      dispatch(slice.actions.getHabitSuccess(response.data));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error.message));
-    }
-  };
 export const toggleUpdateHabit =
   ({ habitId }) =>
   async (dispatch) => {

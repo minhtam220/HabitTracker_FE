@@ -21,7 +21,7 @@ const TabsWrapperStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-function HomePage() {
+function CheckPage() {
   const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState("profile");
 
@@ -32,7 +32,7 @@ function HomePage() {
   return (
     <Container>
       <Card sx={{ mb: 3, height: 400, position: "relative" }}>
-        Welcome to 37.78, {user.username}
+        Check Page Welcome to 37.78, {user.username}
         Here is your habits
         <HabitList userId={user._id} />
         <TabsWrapperStyle>
@@ -49,4 +49,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default CheckPage;

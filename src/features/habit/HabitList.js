@@ -15,20 +15,24 @@ function HabitList({ userId }) {
     isLoading,
     editingHabit,
   } = useSelector((state) => state.habit);
+
   const habits = currentPageHabits.map((habitId) => habitsById[habitId]);
+
   const dispatch = useDispatch();
 
+  /*
   useEffect(() => {
     if (userId) dispatch(getHabits({ userId, page }));
   }, [userId, page, dispatch]);
+  */
+
+  useEffect(() => {
+    dispatch(getHabits());
+  }, []);
 
   return (
     <div>
       {habits.map((habit) =>
-        /*(
-          <HabitCard key={habit._id} habit={habit} />
-        )*/
-
         habit._id === editingHabit ? (
           <HabitForm key={habit._id} habit={habit} />
         ) : (

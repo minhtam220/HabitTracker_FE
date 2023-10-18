@@ -1,13 +1,27 @@
+import { Stack } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Logo from "../app/components/Logo";
-import { Stack } from "@mui/material";
 
 function BlankLayout() {
   return (
-    <Stack minHeight="100vh" justifyContent="center" alignItems="center">
-      <Logo sx={{ width: 90, height: 90, mb: 5 }}></Logo>
-      <Outlet></Outlet>
+    <Stack
+      spacing={3}
+      minHeight="100vh"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Typography
+        sx={{
+          fontFamily: "Monaco", // Change the font family
+          fontSize: "5rem", // Change the font size
+          fontWeight: "bold", // Change the font weight
+          textAlign: "center", // Center the text within the Typography component
+        }}
+      >
+        37.78
+      </Typography>
+      <Outlet style={{ backgroundColor: "#f0f0f0" }}></Outlet>
     </Stack>
   );
 }
