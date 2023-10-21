@@ -15,16 +15,18 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HabitCard from "./HabitCard";
-import { getHabits } from "./habitSlice";
+import { getHabits, trackHabit } from "./habitSlice";
 
 function HabitTable({ userId }) {
   const [page, setPage] = useState(1);
-  // Define a state to keep track of the checked state
-  const [isChecked, setIsChecked] = useState(false);
 
   // Define a function to handle the click event
-  const handleIconClick = () => {
-    setIsChecked(!isChecked);
+  const handleIconClick = (completion_date, complete, habitId) => {
+    console.log("result_date " + completion_date);
+    console.log("complete " + complete);
+    console.log("habitId " + habitId);
+    dispatch(trackHabit({ completion_date, complete, habitId }));
+    dispatch(getHabits());
   };
 
   const {
@@ -36,119 +38,6 @@ function HabitTable({ userId }) {
   } = useSelector((state) => state.habit);
 
   const habits = currentPageHabits.map((habitId) => habitsById[habitId]);
-
-  const habitOne = {
-    _id: "6527ff513bc4769f6b04b3b0",
-    description: "Read a book for 20 minutes before bedtime",
-    type: "good",
-    // ... (other properties)
-    results: [
-      // ... (result objects)
-
-      {
-        _id: "6528dd8c3bc4769f6b04b3d7",
-        result_date: "2023-10-16T00:00:00.000Z",
-        complete: false,
-        stage: "analyse",
-        habit: "6527ff513bc4769f6b04b3b0",
-        totalCompletions: 0,
-        totalDopamines: 0,
-        currentStreak: 0,
-      },
-      {
-        _id: "6528dd8c3bc4769f6b04b3d8",
-        result_date: "2023-10-10T00:00:00.000Z",
-        complete: false,
-        stage: "analyse",
-        habit: "6527ff513bc4769f6b04b3b0",
-        totalCompletions: 0,
-        totalDopamines: 0,
-        currentStreak: 0,
-      },
-      {
-        _id: "6528dd8c3bc4769f6b04b3d9",
-        result_date: "2023-10-11T00:00:00.000Z",
-        complete: false,
-        stage: "analyse",
-        habit: "6527ff513bc4769f6b04b3b0",
-        totalCompletions: 0,
-        totalDopamines: 0,
-        currentStreak: 0,
-      },
-      {
-        _id: "6528dd8c3bc4769f6b04b3da",
-        result_date: "2023-10-12T00:00:00.000Z",
-        complete: false,
-        stage: "analyse",
-        habit: "6527ff513bc4769f6b04b3b0",
-        totalCompletions: 0,
-        totalDopamines: 0,
-        currentStreak: 0,
-      },
-      {
-        _id: "6528dd8c3bc4769f6b04b3db",
-        result_date: "2023-10-13T00:00:00.000Z",
-        complete: false,
-        stage: "analyse",
-        habit: "6527ff513bc4769f6b04b3b0",
-        totalCompletions: 0,
-        totalDopamines: 0,
-        currentStreak: 0,
-      },
-      {
-        _id: "6528dd8c3bc4769f6b04b3dc",
-        result_date: "2023-10-14T00:00:00.000Z",
-        complete: false,
-        stage: "analyse",
-        habit: "6527ff513bc4769f6b04b3b0",
-        totalCompletions: 0,
-        totalDopamines: 0,
-        currentStreak: 0,
-      },
-      {
-        _id: "6528dd8c3bc4769f6b04b3dd",
-        result_date: "2023-10-15T00:00:00.000Z",
-        complete: false,
-        stage: "analyse",
-        habit: "6527ff513bc4769f6b04b3b0",
-        totalCompletions: 0,
-        totalDopamines: 0,
-        currentStreak: 0,
-      },
-    ],
-  };
-
-  const habitTwo = {
-    _id: "6527ff513bc4769f6b04b3b2",
-    description: "Avoid sugary snacks and drinks",
-    type: "good",
-    user: "65164604273dec1588a68451",
-    results: [],
-  };
-
-  const habitThree = {
-    _id: "6527ff513bc4769f6b04b3b3",
-    description: "Smoking cessation program",
-    type: "bad",
-    user: "65164604273dec1588a68451",
-    results: [],
-  };
-
-  const habitFour = {
-    _id: "6527ff513bc4769f6b04b3b1",
-    description: "Limit screen time to 2 hours per day",
-    type: "good",
-    user: "65164604273dec1588a68451",
-    results: [],
-  };
-
-  const habitFive = {
-    _id: "6527ff513bc4769f6b04b3af",
-    description: "Exercise for 30 minutes daily",
-    type: "good",
-    user: "65164604273dec1588a68451",
-    results: [],
-  };
 
   const dispatch = useDispatch();
 
@@ -171,18 +60,48 @@ function HabitTable({ userId }) {
     console.log(updatedHabits);
   };
 
-  // Get the current day index (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
-  const today = new Date().getDay();
-  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  //given the day, get the dates of week
+  //given the today is 20/Oct, calculate the datesOfWeek
+  //datesOfWeek should be [Monday 16/Oct, Tuesday 17/Oct, Wednesday 18/Oct, Thursday 19/Oct, Friday 20/Oct, Saturday 21/Oct, Sunday 22/Oct]
+  function getDatesOfWeek(givenDay) {
+    const today = givenDay ? new Date(givenDay) : new Date();
+    const dayOfWeek = today.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
 
-  const datesOfWeek = [];
+    // Calculate the date of Monday in the current week
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
 
-  for (let index = 0; index < 7; index++) {
-    const date = new Date(Date.now() + (index - 2) * 24 * 60 * 60 * 1000);
-    datesOfWeek[index] = date;
+    // Initialize an array to store the dates
+    const datesOfWeek = [];
+
+    // Loop to get the dates of the week
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + i);
+      datesOfWeek.push(date);
+    }
+
+    // Format the dates as desired (e.g., "Monday 16/Oct")
+    const formattedDates = datesOfWeek.map((date) => {
+      const options = {
+        weekday: "short",
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        timeZoneName: "short",
+      };
+      return new Intl.DateTimeFormat("en-US", options).format(date);
+    });
+
+    return formattedDates;
   }
 
-  //console.log(datesOfWeek);
+  //get the datesOfWeek
+  const givenDay = "2023-10-20";
+  const datesOfWeek = getDatesOfWeek(givenDay);
 
   return (
     <div>
@@ -192,42 +111,9 @@ function HabitTable({ userId }) {
             <TableRow>
               <TableCell>Habit</TableCell>
               {[...Array(7)].map((_, index) => {
-                //index from 0 to 6
-                //const date = new Date(Date.now() + index * 24 * 60 * 60 * 1000);
-                const date = new Date(
-                  Date.now() + (index - 2) * 24 * 60 * 60 * 1000
-                );
-                //Mon Oct 16 2023 15:00:21 GMT+0700 (GMT+07:00)
-
-                const formattedDate = `${date
-                  .getDate()
-                  .toString()
-                  .padStart(2, "0")}/${(date.getMonth() + 1)
-                  .toString()
-                  .padStart(2, "0")}`;
-
-                /*
-                console.log("today index " + today);
-                console.log("index " + index);
-                console.log("date " + date);
-                console.log("formattedDate " + formattedDate);
-
-                */
-
-                //const dayOfWeek = daysOfWeek[(index + 0) % 7]; // Start from Monday
-                const dayOfWeek = daysOfWeek[index];
-
                 return (
                   <TableCell key={index}>
-                    {index + 1 === today ? (
-                      <div>
-                        Today <br /> {formattedDate}
-                      </div>
-                    ) : (
-                      <div>
-                        {dayOfWeek} <br /> {formattedDate}
-                      </div>
-                    )}
+                    {<div>{datesOfWeek[index]}</div>}
                   </TableCell>
                 );
               })}
@@ -235,65 +121,61 @@ function HabitTable({ userId }) {
           </TableHead>
           <TableBody>
             {habits.map((habit) => (
-              <TableRow key={habit._id}>
+              <TableRow>
                 <TableCell>
                   <HabitCard key={habit._id} habit={habit} />
                 </TableCell>
 
                 {[...Array(7)].map((_, index) => {
                   return (
-                    <TableCell>
-                      {/*habit.results
-                        .filter((result) => {
-                          const resultDate = new Date(result.result_date);
-                          return (
-                            resultDate.getDate() ===
-                              datesOfWeek[index].getDate() &&
-                            resultDate.getMonth() ===
-                              datesOfWeek[index].getMonth()
-                          );
-                        })
-                        .map((result) => (
-                          <div key={result._id}>
-                            {result._id}, result_date: {result.result_date}
-                          </div>
-                        ))*/}
-                      {habit.results.some((result) => {
-                        const resultDate = new Date(result.result_date);
+                    <TableCell key={habit._id + index}>
+                      {habit.completions.some((completion) => {
+                        const completionDate = new Date(
+                          completion.completion_date
+                        );
+                        const currentDate = new Date(datesOfWeek[index]);
+
+                        //console.log("resultDate" + resultDate);
+                        //console.log("datesOfWeek[index]" + datesOfWeek[index]);
+
                         return (
-                          resultDate.getDate() ===
-                            datesOfWeek[index].getDate() &&
-                          resultDate.getMonth() ===
-                            datesOfWeek[index].getMonth() &&
-                          result.complete === true
+                          completionDate.getDate() === currentDate.getDate() &&
+                          completionDate.getMonth() ===
+                            currentDate.getMonth() &&
+                          completion.complete === true
                         );
                       }) ? (
                         habit.type === "good" ? (
                           <SentimentSatisfiedAltRoundedIcon
-                            onClick={handleIconClick}
+                            onClick={() =>
+                              handleIconClick(
+                                datesOfWeek[index],
+                                false,
+                                habit._id
+                              )
+                            }
                           />
                         ) : (
                           <SentimentDissatisfiedRoundedIcon
-                            onClick={handleIconClick}
+                            onClick={() =>
+                              handleIconClick(
+                                datesOfWeek[index],
+                                false,
+                                habit._id
+                              )
+                            }
                           />
                         )
                       ) : (
-                        <RadioButtonUncheckedIcon onClick={handleIconClick} />
+                        <RadioButtonUncheckedIcon
+                          onClick={() =>
+                            handleIconClick(datesOfWeek[index], true, habit._id)
+                          }
+                        />
                       )}
                     </TableCell>
                   );
                 })}
-
-                {/*habit.counts.map((count, index) => (
-                  <TableCell key={index}>
-                    <Button
-                      variant="contained"
-                      onClick={() => incrementCount(habit.id, index)}
-                    >
-                      yes
-                    </Button>
-                  </TableCell>
-                ))*/}
               </TableRow>
             ))}
           </TableBody>

@@ -17,9 +17,9 @@ import { Link } from "react-router-dom";
 function MainHeader() {
   const { user, logout } = useAuth();
 
-  console.log(user);
+  //console.log(user);
 
-  console.log(user.username);
+  //console.log(user.username);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -40,7 +40,7 @@ function MainHeader() {
         navigate("/login");
       });
     } catch (error) {
-      console.error(error);
+      //console.error(error);
     }
   };
 

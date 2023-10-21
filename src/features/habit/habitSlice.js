@@ -25,20 +25,22 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = null;
       const { count, habits } = action.payload;
-      console.log("running getHabitSuccess");
-      console.log(action.payload);
-
+      //console.log("running getHabitSuccess");
+      //console.log(action.payload);
       habits.forEach((habit) => {
         state.habitsById[habit._id] = habit;
         if (!state.currentPageHabits.includes(habit._id))
           state.currentPageHabits.push(habit._id);
       });
-
       state.totalHabits = count;
     },
     resetHabits(state, action) {
       state.habitsById = {};
       state.currentPageHabits = [];
+    },
+    trackHabitSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
     },
     deleteHabitSuccess(state, action) {
       state.isLoading = false;
@@ -99,18 +101,36 @@ export const updateHabit =
 
 export const getHabits = () => async (dispatch) => {
   dispatch(slice.actions.startLoading());
-  console.log("running getHabits");
-
+  //console.log("running getHabits");
   try {
     const response = await apiService.get(`/habits/me`);
 
-    console.log(response.data);
+    //console.log(response.data);
 
     dispatch(slice.actions.getHabitSuccess(response.data));
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
   }
 };
+
+export const trackHabit =
+  ({ completion_date, complete, habitId }) =>
+  async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    console.log("running trackHabit");
+    try {
+      const response = await apiService.put(`/habits/${habitId}/track`, {
+        completion_date,
+        complete,
+      });
+
+      console.log(response.data);
+
+      dispatch(slice.actions.trackHabitSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+    }
+  };
 
 export const toggleUpdateHabit =
   ({ habitId }) =>
