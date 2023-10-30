@@ -26,16 +26,26 @@ function InstructionCard({ stage, day }) {
         <CardHeader
           disableTypography
           title={
-            <Typography variant="subtitle2" color="text.primary">
+            <Typography
+              variant="subtitle2"
+              color="text.primary"
+              align="center"
+              style={{ fontSize: "2em" }}
+            >
               Instruction
             </Typography>
           }
           subheader={
             <Typography
               variant="caption"
-              sx={{ display: "block", color: "text.secondary" }}
+              sx={{
+                display: "block",
+                color: "text.secondary",
+                textAlign: "center",
+                fontSize: "1em",
+              }}
             >
-              {text}
+              {text ? text : "There is no instructions for today"}
             </Typography>
           }
         />

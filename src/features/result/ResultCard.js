@@ -13,14 +13,24 @@ function ResultCard({}) {
         <CardHeader
           disableTypography
           title={
-            <Typography variant="subtitle2" color="text.primary">
+            <Typography
+              variant="subtitle2"
+              color="text.primary"
+              align="center"
+              style={{ fontSize: "2em" }}
+            >
               Result
             </Typography>
           }
           subheader={
             <Typography
               variant="caption"
-              sx={{ display: "block", color: "text.secondary" }}
+              sx={{
+                display: "block",
+                color: "text.secondary",
+                textAlign: "center",
+                fontSize: "1em",
+              }}
             >
               The hard must become habit. The habit must become easy. The easy
               must become beautiful. – Doug Henning

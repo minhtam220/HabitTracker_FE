@@ -92,7 +92,7 @@ function MainHeader() {
 
   return (
     <Box sx={{ mb: 3 }}>
-      <AppBar position="static" color="transparent">
+      <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar>
           <IconButton
             size="large"
@@ -101,12 +101,42 @@ function MainHeader() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <Typography>37.78</Typography>
+            <Typography variant="subtitle2" color="text.primary">
+              37.78
+            </Typography>
           </IconButton>
+          <Link
+            to="/analyse"
+            sx={{ color: "text.primary", textDecoration: "none", mx: 1 }}
+          >
+            <Typography variant="subtitle2" color="text.primary">
+              Analyse
+            </Typography>
+          </Link>
 
-          <Link to="/analyse">Analyse</Link>
-          <Link to="/build">Build</Link>
-          <Link to="/check">Check</Link>
+          <Link
+            to="/build"
+            sx={{ color: "text.primary", textDecoration: "none", mx: 1 }}
+          >
+            <Typography variant="subtitle2" color="text.primary">
+              Build
+            </Typography>
+          </Link>
+
+          <Link
+            to="/check"
+            sx={{ color: "text.primary", textDecoration: "none", mx: 1 }}
+          >
+            <Typography
+              variant="subtitle2"
+              color="text.primary"
+              align="center"
+              style={{ fontSize: "2em", textDecoration: "none" }}
+              underline="none" // Add this property // Added textDecoration
+            >
+              Check
+            </Typography>
+          </Link>
 
           <Box sx={{ flexGrow: 1 }} />
           <Box>

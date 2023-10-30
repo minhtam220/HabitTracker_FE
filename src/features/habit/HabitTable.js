@@ -100,7 +100,7 @@ function HabitTable({ userId }) {
   }
 
   //get the datesOfWeek
-  const givenDay = "2023-10-20";
+  const givenDay = "";
   const datesOfWeek = getDatesOfWeek(givenDay);
 
   return (
@@ -128,7 +128,10 @@ function HabitTable({ userId }) {
 
                 {[...Array(7)].map((_, index) => {
                   return (
-                    <TableCell key={habit._id + index}>
+                    <TableCell
+                      key={habit._id + index}
+                      style={{ textAlign: "center" }}
+                    >
                       {habit.completions.some((completion) => {
                         const completionDate = new Date(
                           completion.completion_date
@@ -154,6 +157,7 @@ function HabitTable({ userId }) {
                                 habit._id
                               )
                             }
+                            style={{ fontSize: "4em" }} // Adjust the size here (you can use different units like px, rem, etc.)
                           />
                         ) : (
                           <SentimentDissatisfiedRoundedIcon
@@ -164,6 +168,7 @@ function HabitTable({ userId }) {
                                 habit._id
                               )
                             }
+                            style={{ fontSize: "4em" }} // Adjust the size here (you can use different units like px, rem, etc.)
                           />
                         )
                       ) : (
@@ -171,6 +176,7 @@ function HabitTable({ userId }) {
                           onClick={() =>
                             handleIconClick(datesOfWeek[index], true, habit._id)
                           }
+                          style={{ fontSize: "4em" }} // Adjust the size here (you can use different units like px, rem, etc.)
                         />
                       )}
                     </TableCell>
