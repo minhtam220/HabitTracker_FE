@@ -4,13 +4,13 @@ import SentimentSatisfiedAltRoundedIcon from "@mui/icons-material/SentimentSatis
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,6 +60,8 @@ function HabitTable({ userId }) {
     console.log(updatedHabits);
   };
 
+  //Days of the Week: Monday, Tuesday,..., Sunday
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   //given the day, get the dates of week
   //given the today is 20/Oct, calculate the datesOfWeek
   //datesOfWeek should be [Monday 16/Oct, Tuesday 17/Oct, Wednesday 18/Oct, Thursday 19/Oct, Friday 20/Oct, Saturday 21/Oct, Sunday 22/Oct]
@@ -84,14 +86,8 @@ function HabitTable({ userId }) {
     // Format the dates as desired (e.g., "Monday 16/Oct")
     const formattedDates = datesOfWeek.map((date) => {
       const options = {
-        weekday: "short",
         month: "short",
         day: "2-digit",
-        year: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-        timeZoneName: "short",
       };
       return new Intl.DateTimeFormat("en-US", options).format(date);
     });
@@ -105,15 +101,47 @@ function HabitTable({ userId }) {
 
   return (
     <div>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Habit</TableCell>
+              <TableCell style={{ textAlign: "center", padding: 0, margin: 0 }}>
+                <Typography
+                  variant="subtitle2"
+                  color="text.primary"
+                  align="center"
+                  style={{ fontSize: "2em" }}
+                >
+                  Habit
+                </Typography>
+              </TableCell>
+
               {[...Array(7)].map((_, index) => {
                 return (
-                  <TableCell key={index}>
-                    {<div>{datesOfWeek[index]}</div>}
+                  <TableCell
+                    key={index}
+                    style={{ textAlign: "center", padding: 0, margin: 0 }}
+                  >
+                    <Typography
+                      variant="subtitle2"
+                      color="text.primary"
+                      align="center"
+                      style={{ fontSize: "2em" }}
+                    >
+                      {daysOfWeek[index]}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      align="center"
+                      sx={{
+                        display: "block",
+                        color: "text.secondary",
+                        textAlign: "center",
+                        fontSize: "1em",
+                      }}
+                    >
+                      {datesOfWeek[index]}
+                    </Typography>
                   </TableCell>
                 );
               })}
@@ -122,15 +150,33 @@ function HabitTable({ userId }) {
           <TableBody>
             {habits.map((habit) => (
               <TableRow>
-                <TableCell>
+                <TableCell
+                  style={{ textAlign: "center", padding: 0, margin: 0 }}
+                >
                   <HabitCard key={habit._id} habit={habit} />
+
+                  {/*
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "block",
+                      color: "text.secondary",
+                      textAlign: "center",
+                      fontSize: "1em",
+                      whiteSpace: "pre-line",
+                    }}
+                  >
+                    {habit?.description}
+                  </Typography>
+
+*/}
                 </TableCell>
 
                 {[...Array(7)].map((_, index) => {
                   return (
                     <TableCell
                       key={habit._id + index}
-                      style={{ textAlign: "center" }}
+                      style={{ textAlign: "center", padding: 0, margin: 0 }}
                     >
                       {habit.completions.some((completion) => {
                         const completionDate = new Date(

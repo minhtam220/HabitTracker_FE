@@ -2,8 +2,6 @@ import { Container } from "@mui/material";
 import React from "react";
 import HabitTable from "../features/habit/HabitTable";
 import InstructionCard from "../features/instruction/InstructionCard";
-import MotivationCard from "../features/motivation/MotivationCard";
-import ResultCard from "../features/result/ResultCard";
 import useAuth from "../hooks/useAuth";
 
 function AnalysePage() {
@@ -20,8 +18,8 @@ function AnalysePage() {
         stage="analyse"
         day="1"
       />
-      <MotivationCard sx={{ mb: 3, position: "relative" }} />
-      <ResultCard sx={{ mb: 3, position: "relative" }} />
+      {/*<MotivationCard sx={{ mb: 3, position: "relative" }} /> */}
+      {/*<ResultCard sx={{ mb: 3, position: "relative" }} /> */}
       <HabitTable userId={user._id} />
     </Container>
   );

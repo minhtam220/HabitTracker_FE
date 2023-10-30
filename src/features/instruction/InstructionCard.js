@@ -1,4 +1,4 @@
-import { Box, Card, CardHeader, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../../hooks/useAuth";
@@ -35,20 +35,24 @@ function InstructionCard({ stage, day }) {
               Instruction
             </Typography>
           }
-          subheader={
-            <Typography
-              variant="caption"
-              sx={{
-                display: "block",
-                color: "text.secondary",
-                textAlign: "center",
-                fontSize: "1em",
-              }}
-            >
-              {text ? text : "There is no instructions for today"}
-            </Typography>
-          }
+          sx={{ padding: "1px" }} // Adjust the padding as needed
         />
+        <CardContent>
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              color: "text.secondary",
+              textAlign: "center",
+              fontSize: "1em",
+              whiteSpace: "pre-line", // This preserves both spaces and line breaks
+            }}
+          >
+            {text
+              ? text
+              : "We all have enough will power to build or break one habit at a time.\n - List the 5 habits you want to break or build.\n - Keep track of them for one week starting from today.\n - Know the prime habit on Day 7 and start building it."}
+          </Typography>
+        </CardContent>
       </Card>
       <Box m={2} />
     </>

@@ -4,7 +4,6 @@ import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
@@ -91,48 +90,68 @@ function MainHeader() {
   );
 
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box sx={{ mb: 3, position: "relative" }}>
       <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <Typography variant="subtitle2" color="text.primary">
-              37.78
-            </Typography>
-          </IconButton>
           <Link
             to="/analyse"
-            sx={{ color: "text.primary", textDecoration: "none", mx: 1 }}
+            style={{ color: "inherit", textDecoration: "none", mx: 1 }}
           >
-            <Typography variant="subtitle2" color="text.primary">
+            <Typography
+              variant="subtitle2"
+              color="text.primary"
+              style={{
+                fontSize: "2em",
+                marginRight: "1em",
+              }}
+            >
+              37.78
+            </Typography>
+          </Link>
+
+          <Link
+            to="/analyse"
+            style={{ color: "inherit", textDecoration: "none", mx: 1 }}
+          >
+            <Typography
+              variant="subtitle2"
+              color="text.primary"
+              style={{
+                fontSize: "2em",
+                marginRight: "1em",
+              }}
+            >
               Analyse
             </Typography>
           </Link>
 
           <Link
             to="/build"
-            sx={{ color: "text.primary", textDecoration: "none", mx: 1 }}
+            style={{ color: "inherit", textDecoration: "none", mx: 1 }}
           >
-            <Typography variant="subtitle2" color="text.primary">
+            <Typography
+              variant="subtitle2"
+              color="text.primary"
+              style={{
+                fontSize: "2em",
+                marginRight: "1em",
+              }}
+            >
               Build
             </Typography>
           </Link>
 
           <Link
             to="/check"
-            sx={{ color: "text.primary", textDecoration: "none", mx: 1 }}
+            style={{ color: "inherit", textDecoration: "none", mx: 1 }}
           >
             <Typography
               variant="subtitle2"
               color="text.primary"
-              align="center"
-              style={{ fontSize: "2em", textDecoration: "none" }}
-              underline="none" // Add this property // Added textDecoration
+              style={{
+                fontSize: "2em",
+                marginRight: "1em",
+              }}
             >
               Check
             </Typography>
