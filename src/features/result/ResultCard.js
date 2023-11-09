@@ -31,12 +31,16 @@ function ResultCard({}) {
             sx={{
               display: "block",
               color: "text.secondary",
-              textAlign: "center",
+              textAlign: "left",
               fontSize: "1em",
-              whiteSpace: "pre-line", // This preserves both spaces and line breaks
+              whiteSpace: "pre-line",
+              paddingTop: 1, // Add some top padding for spacing
+              paddingBottom: 1, // Add some bottom padding for spacing
             }}
           >
-            {"Good dopamines: \n Bad dopamines: \n Current prime habit: \n"}
+            {
+              "Current good dopamines: \n Current bad dopamines: \n Current prime habit: \n"
+            }
           </Typography>
         </CardContent>
       </Card>

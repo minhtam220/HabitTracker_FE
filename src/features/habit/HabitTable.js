@@ -12,19 +12,81 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { eachDayOfInterval, format, parseISO, startOfWeek } from "date-fns";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HabitCard from "./HabitCard";
+import HabitForm from "./HabitForm";
 import { getHabits, trackHabit } from "./habitSlice";
+
+const getDatesOfWeek = (givenDay) => {
+  const today = givenDay ? new Date(givenDay) : new Date();
+  today.setHours(0, 0, 0, 0); // set the time to 00:00:00.000
+
+  //console.log("today " + today);
+
+  // Get the start of the week (Monday)
+  const start_of_week = startOfWeek(today, { weekStartsOn: 1 });
+  //start_of_week.setHours(0, 0, 0, 0); // set the time to 00:00:00.000
+  //console.log("start_of_week " + start_of_week);
+
+  // Get the end of the week (Sunday)
+  const end_of_week = new Date(start_of_week);
+  end_of_week.setDate(start_of_week.getDate() + 6);
+  //end_of_week.setHours(0, 0, 0, 0); // set the time to 00:00:00.000;
+  //console.log("end_of_week " + end_of_week);
+
+  // Get each day of the week
+  const datesOfWeek = eachDayOfInterval({
+    start: start_of_week,
+    end: end_of_week,
+  });
+
+  // Format the dates as desired (e.g., "2023-11-09T00:00:00.000Z")
+  /*
+  const formattedDates = datesOfWeek.map((date) => {
+    const utcDate = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 7, 0, 0, 0)
+
+    );
+    return utcDate.toISOString();
+  });
+
+  return formattedDates;
+};
+*/
+
+  // Format the dates as desired (e.g., "2023-11-09T00:00:00.000Z")
+  const formattedDates = datesOfWeek.map((date) => {
+    const utcDate = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 7, 0, 0, 0)
+    );
+    return utcDate.toISOString();
+  });
+
+  //console.log("formattedDates " + formattedDates);
+
+  return formattedDates;
+};
 
 function HabitTable({ userId }) {
   const [page, setPage] = useState(1);
 
+  //
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddClick = () => {
+    setIsAdding(true);
+  };
+
   // Define a function to handle the click event
   const handleIconClick = (completion_date, complete, habitId) => {
+    /*
     console.log("result_date " + completion_date);
     console.log("complete " + complete);
     console.log("habitId " + habitId);
+*/
     dispatch(trackHabit({ completion_date, complete, habitId }));
     dispatch(getHabits());
   };
@@ -45,63 +107,14 @@ function HabitTable({ userId }) {
     dispatch(getHabits());
   }, [dispatch]);
 
-  const incrementCount = (habitId, dayIndex) => {
-    const updatedHabits = habits.map((habit) =>
-      habit.id === habitId
-        ? {
-            ...habit,
-            counts: habit.counts.map((count, index) =>
-              index === dayIndex ? count + 1 : count
-            ),
-          }
-        : habit
-    );
-
-    console.log(updatedHabits);
-  };
-
-  //Days of the Week: Monday, Tuesday,..., Sunday
-  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  //given the day, get the dates of week
-  //given the today is 20/Oct, calculate the datesOfWeek
-  //datesOfWeek should be [Monday 16/Oct, Tuesday 17/Oct, Wednesday 18/Oct, Thursday 19/Oct, Friday 20/Oct, Saturday 21/Oct, Sunday 22/Oct]
-  function getDatesOfWeek(givenDay) {
-    const today = givenDay ? new Date(givenDay) : new Date();
-    const dayOfWeek = today.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
-
-    // Calculate the date of Monday in the current week
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
-
-    // Initialize an array to store the dates
-    const datesOfWeek = [];
-
-    // Loop to get the dates of the week
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(monday);
-      date.setDate(monday.getDate() + i);
-      datesOfWeek.push(date);
-    }
-
-    // Format the dates as desired (e.g., "Monday 16/Oct")
-    const formattedDates = datesOfWeek.map((date) => {
-      const options = {
-        month: "short",
-        day: "2-digit",
-      };
-      return new Intl.DateTimeFormat("en-US", options).format(date);
-    });
-
-    return formattedDates;
-  }
-
   //get the datesOfWeek
   const givenDay = "";
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const datesOfWeek = getDatesOfWeek(givenDay);
 
   return (
     <div>
-      <TableContainer>
+      <TableContainer style={{ marginBottom: 20 }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -140,7 +153,7 @@ function HabitTable({ userId }) {
                         fontSize: "1em",
                       }}
                     >
-                      {datesOfWeek[index]}
+                      {format(parseISO(datesOfWeek[index]), "d-MMM")}
                     </Typography>
                   </TableCell>
                 );
@@ -153,23 +166,11 @@ function HabitTable({ userId }) {
                 <TableCell
                   style={{ textAlign: "center", padding: 0, margin: 0 }}
                 >
-                  <HabitCard key={habit._id} habit={habit} />
-
-                  {/*
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      display: "block",
-                      color: "text.secondary",
-                      textAlign: "center",
-                      fontSize: "1em",
-                      whiteSpace: "pre-line",
-                    }}
-                  >
-                    {habit?.description}
-                  </Typography>
-
-*/}
+                  {editingHabit === habit._id ? (
+                    <HabitForm key={habit._id} habit={habit} />
+                  ) : (
+                    <HabitCard key={habit._id} habit={habit} />
+                  )}
                 </TableCell>
 
                 {[...Array(7)].map((_, index) => {
@@ -182,10 +183,9 @@ function HabitTable({ userId }) {
                         const completionDate = new Date(
                           completion.completion_date
                         );
-                        const currentDate = new Date(datesOfWeek[index]);
+                        completionDate.setUTCHours(0, 0, 0, 0); // set the time to 00:00:00.000
 
-                        //console.log("resultDate" + resultDate);
-                        //console.log("datesOfWeek[index]" + datesOfWeek[index]);
+                        const currentDate = new Date(datesOfWeek[index]);
 
                         return (
                           completionDate.getDate() === currentDate.getDate() &&
@@ -234,12 +234,16 @@ function HabitTable({ userId }) {
         </Table>
       </TableContainer>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        {totalHabits < 5 ? (
-          <LoadingButton variant="outlined" size="small">
-            Add Habits
-          </LoadingButton>
+        {isAdding ? (
+          <HabitForm isAdding={isAdding} setIsAdding={setIsAdding} />
         ) : (
-          ""
+          <LoadingButton
+            variant="outlined"
+            size="small"
+            onClick={handleAddClick}
+          >
+            Add Habit
+          </LoadingButton>
         )}
       </Box>
     </div>

@@ -12,13 +12,17 @@ import {
 import { default as React, useState } from "react";
 import { useDispatch } from "react-redux";
 import useAuth from "../../hooks/useAuth";
-import { toggleUpdateHabit } from "./habitSlice";
+import { deleteHabit, toggleUpdateHabit } from "./habitSlice";
 
 function HabitCard({ habit }) {
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
-
   const [isHovered, setIsHovered] = useState(false);
+
+  //const [isEditing, setIsEditing] = useState(false);
+  //const [editedHabit, setEditedHabit] = useState(habit);
+
+  const dispatch = useDispatch();
 
   const handleToggleHabitMenu = (event) => {
     if (!anchorEl) {
@@ -28,21 +32,17 @@ function HabitCard({ habit }) {
     }
   };
 
-  const dispatch = useDispatch();
+  const handleToggleEditHabit = () => {
+    //setIsEditing(true);
+    dispatch(toggleUpdateHabit({ habitId: habit._id }));
+  };
 
   const handleDeleteHabit = () => {
     const confirmed = window.confirm("Are you sure you want to delete?");
     if (confirmed) {
       // Perform deletion logic here
-      // Call your delete API or update the state to remove the post/comment
-      /*
       dispatch(deleteHabit({ habitId: habit._id }));
-      */
     }
-  };
-
-  const handleEditHabit = () => {
-    dispatch(toggleUpdateHabit({ habitId: habit._id }));
   };
 
   const renderHabitMenu = (
@@ -61,7 +61,7 @@ function HabitCard({ habit }) {
       open={Boolean(anchorEl)}
       onClose={handleToggleHabitMenu}
     >
-      <MenuItem onClick={handleEditHabit} sx={{ mx: 1 }}>
+      <MenuItem onClick={handleToggleEditHabit} sx={{ mx: 1 }}>
         Edit Habit
       </MenuItem>
       <Divider sx={{ borderStyle: "dashed" }} />
@@ -104,7 +104,6 @@ function HabitCard({ habit }) {
               variant="caption"
               sx={{
                 display: "block",
-                color: "text.secondary",
                 textAlign: "center",
                 fontSize: "1em",
                 whiteSpace: "pre-line",
@@ -112,13 +111,12 @@ function HabitCard({ habit }) {
             >
               {habit?.description}
             </Typography>
-
             <IconButton
               className="iconButton"
               onClick={handleToggleHabitMenu}
               style={{ visibility: isHovered ? "visible" : "hidden" }}
             >
-              <MoreVert sx={{ fontSize: 30 }} />
+              <MoreVert sx={{ fontSize: "1em" }} />
               {user._id === habit.userId && renderHabitMenu}
             </IconButton>
           </Box>

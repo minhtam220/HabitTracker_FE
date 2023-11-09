@@ -1,7 +1,8 @@
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import React from "react";
 import HabitTable from "../features/habit/HabitTable";
 import InstructionCard from "../features/instruction/InstructionCard";
+import ResultCard from "../features/result/ResultCard";
 import useAuth from "../hooks/useAuth";
 
 function AnalysePage() {
@@ -12,15 +13,36 @@ function AnalysePage() {
   */
 
   return (
-    <Container>
-      <InstructionCard
-        sx={{ mb: 3, position: "relative" }}
-        stage="analyse"
-        day="1"
-      />
-      {/*<MotivationCard sx={{ mb: 3, position: "relative" }} /> */}
-      {/*<ResultCard sx={{ mb: 3, position: "relative" }} /> */}
-      <HabitTable userId={user._id} />
+    <Container sx={{ display: "block", flexDirection: "column", gap: 1 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          background: "yellow",
+        }}
+      >
+        <InstructionCard
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minWidth: 0, // Allow content to shrink
+          }}
+          stage="analyse"
+          day="1"
+        />
+
+        <ResultCard
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minWidth: 0, // Allow content to shrink
+          }}
+        />
+      </Box>
+      <HabitTable userId={user._id} sx={{ width: "100%" }} />
     </Container>
   );
 }

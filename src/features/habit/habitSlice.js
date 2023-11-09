@@ -4,6 +4,7 @@ import apiService from "../../app/apiService";
 
 const initialState = {
   isLoading: false,
+  isAdding: false,
   error: null,
   habitsById: {},
   currentPageHabits: [],
@@ -20,6 +21,14 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    createHabitSuccess(state, action) {
+      state.isLoading = false;
+      state.isAdding = false;
+      state.error = null;
+      const newHabit = action.payload;
+      state.habitsById[newHabit._id] = newHabit;
+      state.currentPageHabits.push(newHabit._id);
     },
     getHabitSuccess(state, action) {
       state.isLoading = false;
@@ -62,22 +71,25 @@ const slice = createSlice({
       state.error = null;
       //remove habit from editingHabit
       state.editingHabit = null;
+      console.log("running updateHabitSuccess");
+      const updatedHabit = action.payload;
+      console.log(updatedHabit);
+      state.habitsById[updatedHabit._id] = updatedHabit;
     },
   },
 });
 
 export const createHabit =
-  ({ name, description, goalValue, goalFrequency }) =>
+  ({ description, type }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await apiService.post(`/habits`, {
-        name,
         description,
-        goalValue,
-        goalFrequency,
+        type: type ? type : "good",
       });
       dispatch(slice.actions.createHabitSuccess(response.data));
+      toast.success("Create Habit Successfully");
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
     }
@@ -90,9 +102,10 @@ export const updateHabit =
     try {
       const response = await apiService.put(`/habits/${habitId}`, {
         description,
+        type: "good",
       });
       //console.log(response);
-      dispatch(slice.actions.updatePostSuccess(response.data));
+      dispatch(slice.actions.updateHabitSuccess(response.data));
       toast.success("Update Habit Successfully");
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));

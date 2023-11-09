@@ -90,7 +90,14 @@ function MainHeader() {
   );
 
   return (
-    <Box sx={{ mb: 3, position: "relative" }}>
+    <Box
+      sx={{
+        mb: 3,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
       <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar>
           <Link

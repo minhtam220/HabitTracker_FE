@@ -1,34 +1,24 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LoadingButton } from "@mui/lab";
-import { alpha, Box, Card, Stack } from "@mui/material";
-import React from "react";
+import { Box, Button, Card, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
-import { FormProvider, FTextField } from "../../app/components/form";
+import { useDispatch } from "react-redux";
+import * as yup from "yup";
 import { createHabit, updateHabit } from "./habitSlice";
 
-const yupSchema = Yup.object().shape({
-  name: Yup.string().required("Content is required"),
-  description: Yup.string().required("Content is required"),
-  goalValue: Yup.string().required("Content is required"),
-  goalFrequency: Yup.string().required("Content is required"),
+const yupSchema = yup.object().shape({
+  description: yup.string().required("Description is required"),
 });
 
-const defaultValues = {
-  name: "",
-  description: "",
-  goalValue: "",
-  goalFrequency: "",
-};
-
-function HabitForm({ habit }) {
+function HabitForm({ habit, isAdding, setIsAdding }) {
   const methods = useForm({
     resolver: yupResolver(yupSchema),
-    defaultValues,
+    defaultValues: {
+      description: habit ? habit.description : "",
+    },
   });
 
   const {
+    register,
     handleSubmit,
     reset,
     setValue,
@@ -37,66 +27,67 @@ function HabitForm({ habit }) {
 
   const dispatch = useDispatch();
 
-  const { isLoading } = useSelector((state) => state.post);
-
-  const onSubmit = (data) => {
-    if (habit) {
-      data["habitId"] = habit._id;
-      dispatch(updateHabit(data));
+  const onSubmit = async (data) => {
+    console.log("running onSubmit");
+    console.log(data);
+    if (isAdding) {
+      await dispatch(createHabit(data, "good"));
+      setIsAdding(false);
     } else {
-      dispatch(createHabit(data)).then(() => reset());
+      // Handle the case where habit is undefined
+      await dispatch(updateHabit({ ...data, habitId: habit._id }));
     }
   };
 
   return (
-    <Card sx={{ p: 3 }}>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Stack spacing={3}>
-          <FTextField
-            name="name"
-            multiline
-            fullWidth
-            rows={4}
-            placeholder={"What's on your mind?"}
-            sx={{
-              "& fieldset": {
-                borderWidth: `1px !important`,
-                borderColor: alpha("#919EAB", 0.32),
-              },
-            }}
-          />
-          <FTextField
+    <Card
+      sx={{
+        boxShadow: "none",
+        border: "2px solid white",
+        borderRadius: 2,
+        padding: 0,
+        margin: 0,
+      }}
+    >
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 2,
+          p: 3,
+          marginLeft: 10,
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 2,
+          }}
+        >
+          <TextField
+            {...register("description")}
             name="description"
-            multiline
-            fullWidth
-            rows={4}
-            placeholder={"What's on your mind?"}
-            sx={{
-              "& fieldset": {
-                borderWidth: `1px !important`,
-                borderColor: alpha("#919EAB", 0.32),
-              },
-            }}
+            variant="outlined"
+            size="small"
           />
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            <LoadingButton
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button
               type="submit"
               variant="contained"
-              size="small"
-              loading={isSubmitting || isLoading}
+              color="primary"
+              disabled={isSubmitting}
             >
-              Save
-            </LoadingButton>
+              {habit ? "Update" : "Create"}
+            </Button>
           </Box>
-        </Stack>
-      </FormProvider>
+        </Box>
+      </form>
     </Card>
   );
 }
