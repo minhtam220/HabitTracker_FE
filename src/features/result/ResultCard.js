@@ -1,12 +1,42 @@
 import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material";
-import { default as React } from "react";
-import { useDispatch } from "react-redux";
-import useAuth from "../../hooks/useAuth";
+import { default as React, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { getResults } from "./resultSlice";
 
 function ResultCard({}) {
-  const { user } = useAuth();
+  const {
+    isLoading,
+    resultsById,
+    currentPageResults,
+    totalCompletions,
+    totalGoodDopamines,
+    totalBadDopamines,
+  } = useSelector((state) => state.result);
+
+  const results = currentPageResults.map((resultId) => resultsById[resultId]);
+
+  // Assuming 'results' is an array of your results
+  const dopamineResults =
+    totalGoodDopamines > totalBadDopamines
+      ? results.filter((result) => result.habit.type === "good")
+      : results.filter((result) => result.habit.type === "bad");
+
+  const resultWithMaxDopamines = dopamineResults.reduce(
+    (max, result) =>
+      result.totalCompletions > max.totalCompletions ? result : max,
+    dopamineResults[0]
+  );
+
+  const primeHabit = resultWithMaxDopamines
+    ? JSON.stringify(resultWithMaxDopamines.habit.description)
+    : null;
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getResults());
+  }, [dispatch]);
 
   return (
     <>
@@ -38,9 +68,17 @@ function ResultCard({}) {
               paddingBottom: 1, // Add some bottom padding for spacing
             }}
           >
-            {
-              "Current good dopamines: \n Current bad dopamines: \n Current prime habit: \n"
-            }
+            Completions (for debug only): {totalCompletions}
+            {"\n"}
+            Current Good Dopamines: {totalGoodDopamines}
+            {"\n"}
+            Current Bad Dopamines: {totalBadDopamines}
+            {"\n"}
+            {totalGoodDopamines > totalBadDopamines
+              ? "You are doing great! Keep it up!"
+              : "You are stressed! Take a break!"}
+            {"\n"}
+            Current Prime Habit: {primeHabit}
           </Typography>
         </CardContent>
       </Card>

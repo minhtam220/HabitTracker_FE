@@ -16,6 +16,7 @@ import { eachDayOfInterval, format, parseISO, startOfWeek } from "date-fns";
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getResults } from "../result/resultSlice";
 import HabitCard from "./HabitCard";
 import HabitForm from "./HabitForm";
 import { getHabits, trackHabit } from "./habitSlice";
@@ -82,13 +83,10 @@ function HabitTable({ userId }) {
 
   // Define a function to handle the click event
   const handleIconClick = (completion_date, complete, habitId) => {
-    /*
-    console.log("result_date " + completion_date);
-    console.log("complete " + complete);
-    console.log("habitId " + habitId);
-*/
-    dispatch(trackHabit({ completion_date, complete, habitId }));
-    dispatch(getHabits());
+    dispatch(trackHabit({ completion_date, complete, habitId })).then(() => {
+      dispatch(getHabits());
+      dispatch(getResults());
+    });
   };
 
   const {
