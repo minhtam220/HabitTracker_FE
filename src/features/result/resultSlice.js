@@ -61,4 +61,14 @@ export const getResults = () => async (dispatch) => {
   }
 };
 
+export const calculateResults = () => async (dispatch) => {
+  dispatch(slice.actions.startLoading());
+  try {
+    const response = await apiService.get(`/results/calculate`);
+    dispatch(slice.actions.getResultSuccess(response.data));
+  } catch (error) {
+    dispatch(slice.actions.hasError(error.message));
+  }
+};
+
 export default slice.reducer;
