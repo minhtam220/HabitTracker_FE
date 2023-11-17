@@ -13,50 +13,28 @@ import {
   Typography,
 } from "@mui/material";
 import { eachDayOfInterval, format, parseISO, startOfWeek } from "date-fns";
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getResults } from "../result/resultSlice";
 import HabitCard from "./HabitCard";
 import HabitForm from "./HabitForm";
-import { getHabits, trackHabit } from "./habitSlice";
+import { getHabits, getSingleHabit, trackHabit } from "./habitSlice";
 
 const getDatesOfWeek = (givenDay) => {
   const today = givenDay ? new Date(givenDay) : new Date();
   today.setHours(0, 0, 0, 0); // set the time to 00:00:00.000
 
-  //console.log("today " + today);
-
   // Get the start of the week (Monday)
   const start_of_week = startOfWeek(today, { weekStartsOn: 1 });
-  //start_of_week.setHours(0, 0, 0, 0); // set the time to 00:00:00.000
-  //console.log("start_of_week " + start_of_week);
 
   // Get the end of the week (Sunday)
   const end_of_week = new Date(start_of_week);
   end_of_week.setDate(start_of_week.getDate() + 6);
-  //end_of_week.setHours(0, 0, 0, 0); // set the time to 00:00:00.000;
-  //console.log("end_of_week " + end_of_week);
 
   // Get each day of the week
   const datesOfWeek = eachDayOfInterval({
     start: start_of_week,
     end: end_of_week,
   });
-
-  // Format the dates as desired (e.g., "2023-11-09T00:00:00.000Z")
-  /*
-  const formattedDates = datesOfWeek.map((date) => {
-    const utcDate = new Date(
-      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 7, 0, 0, 0)
-
-    );
-    return utcDate.toISOString();
-  });
-
-  return formattedDates;
-};
-*/
 
   // Format the dates as desired (e.g., "2023-11-09T00:00:00.000Z")
   const formattedDates = datesOfWeek.map((date) => {
@@ -84,8 +62,8 @@ function HabitTable({ userId }) {
   // Define a function to handle the click event
   const handleIconClick = (completion_date, complete, habitId) => {
     dispatch(trackHabit({ completion_date, complete, habitId })).then(() => {
-      dispatch(getHabits());
-      dispatch(getResults());
+      //dispatch(getHabits());
+      dispatch(getSingleHabit(habitId));
     });
   };
 
@@ -130,7 +108,7 @@ function HabitTable({ userId }) {
               {[...Array(7)].map((_, index) => {
                 return (
                   <TableCell
-                    key={index}
+                    key={`header-${index}`}
                     style={{ textAlign: "center", padding: 0, margin: 0 }}
                   >
                     <Typography
@@ -159,9 +137,10 @@ function HabitTable({ userId }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {habits.map((habit) => (
-              <TableRow>
+            {habits.map((habit, habitIndex) => (
+              <TableRow key={`row-${habitIndex}`}>
                 <TableCell
+                  key={`cell-${habitIndex}`}
                   style={{ textAlign: "center", padding: 0, margin: 0 }}
                 >
                   {editingHabit === habit._id ? (
@@ -174,7 +153,7 @@ function HabitTable({ userId }) {
                 {[...Array(7)].map((_, index) => {
                   return (
                     <TableCell
-                      key={habit._id + index}
+                      key={`cell-${habitIndex}-${index}`}
                       style={{ textAlign: "center", padding: 0, margin: 0 }}
                     >
                       {habit.completions.some((completion) => {

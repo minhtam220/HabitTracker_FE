@@ -1,7 +1,6 @@
 import { Box, Container } from "@mui/material";
 import React from "react";
 import HabitTable from "../features/habit/HabitTable";
-import InstructionCard from "../features/instruction/InstructionCard";
 import ResultCard from "../features/result/ResultCard";
 import useAuth from "../hooks/useAuth";
 
@@ -22,7 +21,8 @@ function AnalysePage() {
           background: "yellow",
         }}
       >
-        <InstructionCard
+        {/*
+            <InstructionCard
           sx={{
             flex: 1,
             display: "flex",
@@ -32,16 +32,17 @@ function AnalysePage() {
           stage="analyse"
           day="1"
         />
-
-        <ResultCard
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            minWidth: 0, // Allow content to shrink
-          }}
-        />
+        
+        */}
       </Box>
+      <ResultCard
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0, // Allow content to shrink
+        }}
+      />
       <HabitTable userId={user._id} sx={{ width: "100%" }} />
     </Container>
   );

@@ -1,20 +1,13 @@
 import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { default as React, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { getResults } from "./resultSlice";
 
 function ResultCard({}) {
-  const {
-    isLoading,
-    resultsById,
-    currentPageResults,
-    totalCompletions,
-    totalGoodDopamines,
-    totalBadDopamines,
-  } = useSelector((state) => state.result);
+  const results = useSelector((state) => state.habit.results);
 
-  const results = currentPageResults.map((resultId) => resultsById[resultId]);
+  //const results = currentPageResults.map((resultId) => resultsById[resultId]);
+  console.log(results);
 
   // Assuming 'results' is an array of your results
   const dopamineResults =
@@ -68,7 +61,7 @@ function ResultCard({}) {
               paddingBottom: 1, // Add some bottom padding for spacing
             }}
           >
-            Completions (for debug only): {totalCompletions}
+            Total Dopamines: {totalCompletions}
             {"\n"}
             Current Good Dopamines: {totalGoodDopamines}
             {"\n"}

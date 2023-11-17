@@ -7,12 +7,12 @@ import { getInstruction } from "./instructionSlice";
 function InstructionCard({ stage, day }) {
   const { user } = useAuth();
 
-  console.log("stage" + stage);
-  console.log("day" + day);
+  //console.log("stage" + stage);
+  //console.log("day" + day);
 
   const text = useSelector((state) => state.instruction.text);
 
-  console.log(text);
+  //console.log(text);
 
   const dispatch = useDispatch();
 

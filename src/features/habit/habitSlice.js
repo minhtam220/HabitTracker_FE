@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
 import apiService from "../../app/apiService";
 
 const initialState = {
@@ -43,6 +42,15 @@ const slice = createSlice({
       });
       state.totalHabits = count;
     },
+    getSingleHabitSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+      console.log("running getSingleHabitSuccess");
+      const habit = action.payload.habit;
+      console.log(habit);
+      console.log(state.habitsById[habit._id]);
+      state.habitsById[habit._id] = habit;
+    },
     resetHabits(state, action) {
       state.habitsById = {};
       state.currentPageHabits = [];
@@ -51,6 +59,11 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = null;
     },
+    calculateResultsSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+    },
+
     deleteHabitSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
@@ -89,7 +102,7 @@ export const createHabit =
         type: type ? type : "good",
       });
       dispatch(slice.actions.createHabitSuccess(response.data));
-      toast.success("Create Habit Successfully");
+      //toast.success("Create Habit Successfully");
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
     }
@@ -106,7 +119,7 @@ export const updateHabit =
       });
       //console.log(response);
       dispatch(slice.actions.updateHabitSuccess(response.data));
-      toast.success("Update Habit Successfully");
+      //toast.success("Update Habit Successfully");
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
     }
@@ -114,13 +127,20 @@ export const updateHabit =
 
 export const getHabits = () => async (dispatch) => {
   dispatch(slice.actions.startLoading());
-  //console.log("running getHabits");
+
   try {
     const response = await apiService.get(`/habits/me`);
-
-    //console.log(response.data);
-
     dispatch(slice.actions.getHabitSuccess(response.data));
+  } catch (error) {
+    dispatch(slice.actions.hasError(error.message));
+  }
+};
+
+export const getSingleHabit = (habitId) => async (dispatch) => {
+  dispatch(slice.actions.startLoading());
+  try {
+    const response = await apiService.get(`/habits/${habitId}`);
+    dispatch(slice.actions.getSingleHabitSuccess(response.data));
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
   }
@@ -130,20 +150,28 @@ export const trackHabit =
   ({ completion_date, complete, habitId }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    console.log("running trackHabit");
     try {
-      const response = await apiService.put(`/habits/${habitId}/track`, {
+      const response = await apiService.put(`/habits/${habitId}/completions`, {
         completion_date,
         complete,
       });
-
-      console.log(response.data);
-
       dispatch(slice.actions.trackHabitSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
     }
   };
+
+export const calculateResults = (end_date) => async (dispatch) => {
+  dispatch(slice.actions.startLoading());
+  try {
+    const response = await apiService.put(`/results/calculate`, {
+      end_date,
+    });
+    dispatch(slice.actions.calculateResultsSuccess(response.data));
+  } catch (error) {
+    dispatch(slice.actions.hasError(error.message));
+  }
+};
 
 export const toggleUpdateHabit =
   ({ habitId }) =>
